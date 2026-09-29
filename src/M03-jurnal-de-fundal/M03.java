@@ -19,7 +19,32 @@
 //   In timpul rularii au aparut linii de jurnal intercalate cu comenzile.
 // =============================================================
 
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class M03 {
+
+    static class Comanda implements Runnable {
+        private final int numar;
+        private final AtomicInteger procesate;
+
+        public Comanda(int numar, AtomicInteger procesate) {
+            this.numar = numar;
+            this.procesate = procesate;
+        }
+        @Override
+        public void run() {
+            try {
+                int durata = 50 + new Random().nextInt(100);
+                Thread.sleep(durata);
+
+                System.out.println("Comanda : " + numar + "procesata de: " + Thread.currentThread().getName());
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
     }
