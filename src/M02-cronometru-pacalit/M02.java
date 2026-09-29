@@ -20,7 +20,66 @@
 // =============================================================
 
 public class M02 {
-    public static void main(String[] args) {
 
+    static class Sarcina extends Thread {
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(500);
+                System.out.println("Executat de: "+ Thread.currentThread().getName());
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+
+
+    public static void main(String[] args)  throws InterruptedException{
+
+        //Medtoda A
+
+        long startA = System.currentTimeMillis();
+
+        Sarcina s1 = new Sarcina();
+        Sarcina s2 = new Sarcina();
+        Sarcina s3 = new Sarcina();
+        Sarcina s4 = new Sarcina();
+
+        s1.start();
+        s2.start();
+        s3.start();
+        s4.start();
+
+        s1.join();
+        s2.join();
+        s3.join();
+        s4.join();
+
+        long endA = System.currentTimeMillis();
+        long durataA = endA - startA;
+
+        System.out.println("Vaianta A : " + durataA + "ms");
+
+
+
+
+        //Metoda B
+
+        long startB = System.currentTimeMillis();
+
+        s1.run();
+        s2.run();
+        s3.run();
+        s4.run();
+        long endB = System.currentTimeMillis();
+        long durataB = endB - startB;
+
+        System.out.println("Vaianta B : " + durataB + "ms");
+
+
+        double n = (double)durataA/durataB;
+        System.out.println("Vaianta A a fost de " + n + "ori mai rapid ");
     }
 }
