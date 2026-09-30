@@ -79,7 +79,7 @@ public class M02 {
         System.out.println("Vaianta B : " + durataB + "ms");
 
 
-        double n = (double)durataA/durataB;
+        double n =  Math.round(durataB * 10.0 / durataA) / 10.0;
         System.out.println("Vaianta A a fost de " + n + "ori mai rapid ");
     }
 }

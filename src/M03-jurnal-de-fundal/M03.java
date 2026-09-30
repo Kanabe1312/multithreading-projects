@@ -45,6 +45,25 @@ public class M03 {
         }
     }
 
+    static class Jurnal implements Runnable {
+        private final AtomicInteger procesate;
+        public Jurnal( AtomicInteger procesate) {
+            this.procesate = procesate;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    Thread.sleep(100);
+                    System.out.println("Jurnal procesate : " + procesate.getAndIncrement());
+                }
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
     }
