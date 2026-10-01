@@ -35,6 +35,19 @@ javac M01.java && java M01
 | M04 | Calculator de facturi | factura 3 raportata cu motivul real; prima linie tarziu, restul instant |
 | M05 | Contor de vizite (3 stagii) | A pierde, B si C dau 200.000, C mai rapid ca B |
 
+## Lotul 1-bis — tot lectia 01, alte domenii
+
+Aceleasi notiuni ca M01-M05, cu capcana mutata in alta parte. Fiecare
+proiect "b" trece prin exact aceeasi teorie ca fratele lui fara "b".
+
+| # | Mini-proiect | Ce trebuie sa iasa |
+|---|---|---|
+| M01b | Trei cuptoare | ordinea iesirii are timpii crescatori; total ~= cea mai lenta pizza |
+| M02b | Colete si curieri | A ~400 ms cu 6 fire distincte, B ~2400 ms cu 1 singur fir |
+| M03b | Bara de progres | 0% -> 100% intercalat, sumarul ultima linie, 15 din 15 |
+| M04b | Cinci furnizori | gama cu motivul real; acelasi nume de fir de mai multe ori |
+| M05b | Casa de bilete (3 stagii) | vandute + stoc = 40.000 la B si C, rupt la A; C mai rapid ca B |
+
 ## Hinturi
 
 Le citesti **dupa** ce te-ai blocat, nu inainte. Niciunul nu-ti da solutia:
@@ -72,9 +85,50 @@ iti spune unde sa cauti si ce intrebare sa-ti pui.
   lenta nu atinge contorul — pune-ti intrebarea daca are ce cauta inauntru.
   `teorie/C2-synchronized-method` vs `teorie/C3-synchronized-block`.
 
+### M01b - Trei cuptoare
+- `join()` nu-ti spune CAND s-a terminat un fir, doar te asigura ca s-a
+  terminat. Daca vrei momentul, cine e singurul care-l stie? `teorie/A3-join`.
+- Ordinea in care astepti nu e ordinea in care se termina. A doua se afla
+  numai din interiorul muncii.
+
+### M02b - Colete si curieri
+- Cuvantul care difera intre A si B e numele unei metode a aceluiasi obiect.
+  `teorie/A4-start-vs-run`.
+- Ca sa numeri fire DISTINCTE iti trebuie o colectie care nu accepta
+  duplicate.
+- Daca la varianta B iti ies 6 fire distincte in loc de 1: ai intrebat
+  OBIECTUL cum il cheama, sau ai intrebat firul care executa chiar acum?
+
+### M03b - Bara de progres
+- Ce fel de fir NU tine programul in viata dupa ce `main` s-a terminat?
+  `teorie/A5-daemon`. Marcajul se pune inainte de pornire.
+- Bara CITESTE progresul. Cine il creste? Daca raspunsul e tot bara, atunci
+  contorul numara altceva decat crezi tu.
+- Cele 15 copieri nu sunt 15 fire. Reciteste cerinta si numara: cate fire in
+  plus fata de `main` are programul asta?
+
+### M04b - Cinci furnizori
+- Pentru firele care se refolosesc, `teorie/B4-pool`. Numarul de fire de
+  lucru nu e acelasi lucru cu numarul de cereri.
+- Ca sa afli cel mai ieftin iti trebuie VALOAREA intoarsa de fiecare cerere,
+  nu doar faptul ca s-a terminat. `teorie/B2-callable-future`.
+- O exceptie aruncata pe alt fir nu ajunge la tine asa cum a plecat.
+  `teorie/B3-exception-wrapping` arata ce trebuie sa intrebi obiectul de
+  exceptie ca sa afli motivul real.
+
+### M05b - Casa de bilete
+- Stagiul A seamana cu `teorie/C1-race-condition`, dar aici se strica doua
+  campuri deodata, nu unul singur.
+- Intre B si C nu difera DACA protejezi, ci CAT tii protectia. Bonul nu
+  atinge nici stocul, nici contorul — pune-ti intrebarea daca are ce cauta
+  inauntru. `teorie/C2-synchronized-method` vs `teorie/C3-synchronized-block`.
+- Egalitatea `vandute + stoc` e plasa ta de siguranta: o calculezi si o
+  tiparesti la FIECARE stagiu, nu doar la A.
+
 ## Ce urmeaza
 
-Loturile 2 si 3 (lectiile 02 si 03) vin dupa ce lotul 1 e terminat:
+Loturile 2 si 3 (lectiile 02 si 03) vin dupa ce lotul 1 si lotul 1-bis
+sunt terminate:
 buton de oprire, contor de clickuri, distribuitor de bonuri, licitatie,
 seif, cabina de proba, banda de asamblare, tabela de sosiri, numaratoare
 de cuvinte, notificari catre abonati, transferuri bancare.
