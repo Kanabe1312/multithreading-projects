@@ -26,79 +26,58 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class M03 {
 
-    static class Comanda implements Runnable {
-        private final int numar;
-        private final AtomicInteger procesate;
 
-        public Comanda(int numar, AtomicInteger procesate) {
-            this.numar = numar;
-            this.procesate = procesate;
+
+    static class Jurnal implements Runnable {
+        private final Comenzi  comenzi;
+        public Jurnal( Comenzi procesate) {
+            this.comenzi = procesate;
         }
+
         @Override
         public void run() {
-            try {
-                int durata = 50 + new Random().nextInt(100);
-                Thread.sleep(durata);
-
-                System.out.println("Comanda : " + numar + "procesata de: " + Thread.currentThread().getName());
-            }catch (InterruptedException e){
-                Thread.currentThread().interrupt();
+            while (true) {
+                System.out.println("procesate pana acum : "+comenzi.procesate);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
         }
     }
 
-    static class Jurnal implements Runnable {
-        private final AtomicInteger procesate;
-        public Jurnal( AtomicInteger procesate) {
-            this.procesate = procesate;
+    static  class Comenzi{
+        private  int procesate=0;
+        void inregistreaza(){
+            procesate++;
         }
-
-        @Override
-        public void run() {
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    Thread.sleep(100);
-                    System.out.println("Jurnal procesate : " + procesate.getAndIncrement());
-                }
-            }catch (InterruptedException e){
-                Thread.currentThread().interrupt();
-            }
+        int getProcesate(){
+            return procesate;
         }
     }
 
     public static void main(String[] args) throws InterruptedException {
 
-        AtomicInteger procesate = new AtomicInteger(0);
-
-        Jurnal jurnal = new Jurnal(procesate);
-
-        Thread jurnalThread = new Thread(jurnal,"Jurnal thread");
-        jurnalThread.start();
+        Comenzi procesate = new Comenzi();
 
 
-        List<Thread> comenzi = new ArrayList<>();
+       Random rand = new Random();
+       Thread jurnal = new Thread(new Jurnal(procesate),"jurnal : ");
+       jurnal.setDaemon(true);
+       jurnal.start();
+       long start=System.currentTimeMillis();
+       for(int i=1;i<=20;i++){
+           Thread.sleep(50+rand.nextInt(101));
+           procesate.inregistreaza();
+           System.out.println("comanda: "+i+" este gata");
 
-        for (int i = 1; i <= 20; i++) {
+       }
 
-            Thread thread = new Thread(
-                    new Comanda(i, procesate),
-                    "Comanda-" + i
-            );
+       long total=System.currentTimeMillis()-start;
 
-            comenzi.add(thread);
-            thread.start();
-        }
-
-        for (Thread thread : comenzi) {
-            thread.join();
-        }
-
-        jurnalThread.interrupt();
-
-        jurnalThread.join();
-
-        System.out.println(
-                "SUMAR: " + procesate.get() + " comenzi procesate."
-        );
+        System.out.println("total: "+total);
+        System.out.println("Comenzi procesatre: "+procesate.getProcesate());
     }
 }

@@ -27,8 +27,77 @@
 //   Celelalte 5 facturi au totalul corect.
 // =============================================================
 
-public class M04 {
-    public static void main(String[] args) {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+public class M04 {
+
+    static class Factura{
+
+        private final int nrFactura;
+        private final int[] sume;
+
+        public Factura(int nrFactura, int[] sume) {
+            this.nrFactura = nrFactura;
+            this.sume = sume;
+        }
+
+        int calculeaza() throws Exception{
+            Thread.sleep((6-nrFactura)*300L);
+            int total = 0;
+
+            for(int suma : sume){
+                if(suma < 0){
+                    throw new Exception( "Invalid amount on invoice " + nrFactura);
+                }
+                total += suma;
+            }
+            return total;
+        }
+
+
+    }
+    public static void main(String[] args)  throws InterruptedException {
+        List<Factura> facturi = new ArrayList<>();
+        facturi.add(new Factura(0, new int[]{120, 80, 45}));
+        facturi.add(new Factura(1, new int[]{200, 15}));
+        facturi.add(new Factura(2, new int[]{60, 60, 60}));
+        facturi.add(new Factura(3, new int[]{90, -40, 12}));
+        facturi.add(new Factura(4, new int[]{310}));
+        facturi.add(new Factura(5, new int[]{25, 25, 25, 25}));
+
+
+
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+
+        List<Future<Integer>> futures = new ArrayList<>();
+
+        long start=System.currentTimeMillis();
+
+
+        for(Factura factura : facturi){
+            futures.add(executor.submit(factura::calculeaza));
+        }
+        int total=0;
+        int esuate=0;
+        for(int i = 0; i < futures.size(); i++){
+            try{
+                int rezultate = futures.get(i).get();
+                System.out.println("Factura " + i + " total: " + rezultate);
+            }catch(Exception e){
+                System.out.println("Factura "+ i + "  :  " + e.getMessage());
+                esuate++;
+            }
+        }
+
+        executor.shutdown();
+
+        System.out.println("Suma totala : "+ total);
+        System.out.println("Suma esuate : "+esuate);
     }
 }
