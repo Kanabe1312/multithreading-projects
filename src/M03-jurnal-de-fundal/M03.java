@@ -19,6 +19,8 @@
 //   In timpul rularii au aparut linii de jurnal intercalate cu comenzile.
 // =============================================================
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -64,7 +66,39 @@ public class M03 {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
+        AtomicInteger procesate = new AtomicInteger(0);
+
+        Jurnal jurnal = new Jurnal(procesate);
+
+        Thread jurnalThread = new Thread(jurnal,"Jurnal thread");
+        jurnalThread.start();
+
+
+        List<Thread> comenzi = new ArrayList<>();
+
+        for (int i = 1; i <= 20; i++) {
+
+            Thread thread = new Thread(
+                    new Comanda(i, procesate),
+                    "Comanda-" + i
+            );
+
+            comenzi.add(thread);
+            thread.start();
+        }
+
+        for (Thread thread : comenzi) {
+            thread.join();
+        }
+
+        jurnalThread.interrupt();
+
+        jurnalThread.join();
+
+        System.out.println(
+                "SUMAR: " + procesate.get() + " comenzi procesate."
+        );
     }
 }
