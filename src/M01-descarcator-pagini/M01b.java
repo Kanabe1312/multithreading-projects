@@ -43,7 +43,6 @@ public class M01b {
         public void run() {
             try {
                 Thread.sleep(timp);
-
                 synchronized (iesite) {
                     iesite.add(this);
                 }
@@ -97,14 +96,12 @@ public class M01b {
         }
 
         System.out.println();
-        System.out.println("Cea mai lenta: " + lenta.getNume()
-                + " (" + lenta.getTimp() + " ms)");
+        System.out.println("Cea mai lenta: " + lenta.getNume() + "(" + lenta.getTimp() + " ms)");
 
         System.out.println("Suma timpilor: " + suma + " ms");
         System.out.println("Durata totala: " + total + " ms");
 
-        System.out.println("Verdict: "
-                + (total < suma / 2 ? "in paralel" : "secvential"));
+        System.out.println("Verdict: " + (total < suma / 2 ? "in paralel" : "secvential"));
 
     }
 }
