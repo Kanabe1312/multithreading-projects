@@ -88,6 +88,7 @@ public class M04 {
         for(int i = 0; i < futures.size(); i++){
             try{
                 int rezultate = futures.get(i).get();
+                total+=rezultate;
                 System.out.println("Factura " + i + " total: " + rezultate);
             }catch(Exception e){
                 System.out.println("Factura "+ i + "  :  " + e.getMessage());
