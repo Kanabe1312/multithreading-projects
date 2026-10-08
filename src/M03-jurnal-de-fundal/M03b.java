@@ -37,6 +37,8 @@ public class M03b {
     static class COpiere implements Runnable{
         private final Progres progres;
         private final Random rand = new Random();
+
+
         public COpiere(Progres progres){
             this.progres = progres;
         }
