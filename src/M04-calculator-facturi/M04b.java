@@ -110,6 +110,7 @@ public class M04b {
 
         for (Furnizor furnizor : furnizori) {
             sumaTimpilor += furnizor.timp;
+
         }
 
         System.out.println();
