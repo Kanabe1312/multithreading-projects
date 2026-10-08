@@ -21,8 +21,82 @@
 //   Sumarul afiseaza 15 din 15.
 // =============================================================
 
+import java.util.Random;
+
 public class M03b {
-    public static void main(String[] args) {
+    static class Progres{
+        private int copiate = 0;
+        synchronized void copiat(){
+            copiate++;
+        }
+        synchronized int getCopiate(){
+            return copiate;
+        }
+    }
+
+    static class COpiere implements Runnable{
+        private final Progres progres;
+        private final Random rand = new Random();
+        public COpiere(Progres progres){
+            this.progres = progres;
+        }
+        @Override
+        public void run(){
+            try {
+                for(int i= 1;i <= 15;i++){
+                    int timp = 80 + rand.nextInt(120);
+                    Thread.sleep(timp);
+
+                    progres.copiat();
+
+                    System.out.println("Fisier " + i + " copiat");
+                }
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
 
     }
+    static class Bara implements Runnable{
+        private final Progres progres;
+
+        public Bara(Progres progres){
+            this.progres = progres;
+        }
+        @Override
+        public void run(){
+            try {
+                while(!Thread.currentThread().isInterrupted()){
+                    int copiate = progres.getCopiate();
+                    int procent = copiate * 100/15;
+
+                    System.out.println("Progress: " + procent + "%");
+                    if(copiate == 15){
+                        return;
+                    }
+                }Thread.sleep(100);
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+            Thread bara = new Thread(new Bara(progres), "Bara");
+
+            bara.setDaemon(true);
+            bara.start();
+        }
+
+    }
+    public static void main(String[] args) throws InterruptedException {
+        Progres progres = new Progres();
+
+        Thread copiere = new Thread(new COpiere(progres), "Copiere");
+        Thread bara = new Thread(new Bara(progres), "Bara");
+        bara.setDaemon(true);
+        bara.start();
+        copiere.start();
+        copiere.join();
+
+        System.out.println("Gata: " + progres.getCopiate() + "/15 fisiere copiate.");
+    }
+
 }
+
