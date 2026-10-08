@@ -97,7 +97,6 @@ public class M01b {
 
         System.out.println();
         System.out.println("Cea mai lenta: " + lenta.getNume() + "(" + lenta.getTimp() + " ms)");
-
         System.out.println("Suma timpilor: " + suma + " ms");
         System.out.println("Durata totala: " + total + " ms");
 
