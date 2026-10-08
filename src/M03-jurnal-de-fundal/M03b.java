@@ -73,17 +73,16 @@ public class M03b {
                     int procent = copiate * 100/15;
 
                     System.out.println("Progress: " + procent + "%");
-                    if(copiate == 15){
-                        return;
-                    }
-                }Thread.sleep(100);
+
+                    Thread.sleep(100);
+                }
             }catch (InterruptedException e){
                 Thread.currentThread().interrupt();
             }
             Thread bara = new Thread(new Bara(progres), "Bara");
 
             bara.setDaemon(true);
-            bara.start();
+
         }
 
     }

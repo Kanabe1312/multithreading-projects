@@ -33,11 +33,11 @@ javac M01.java && java M01
 | M02 | Cronometrul pacalit | A ~500 ms cu fire diferite, B ~2000 ms pe acelasi fir |
 | M03 | Jurnal de fundal | programul iese singur, ultima linie e sumarul |
 | M04 | Calculator de facturi | factura 3 raportata cu motivul real; prima linie tarziu, restul instant |
-| M05 | Contor de vizite (3 stagii) | A pierde, B si C dau 200.000, C mai rapid ca B |
+| contorViteze.M05 | Contor de vizite (3 stagii) | A pierde, B si C dau 200.000, C mai rapid ca B |
 
 ## Lotul 1-bis — tot lectia 01, alte domenii
 
-Aceleasi notiuni ca M01-M05, cu capcana mutata in alta parte. Fiecare
+Aceleasi notiuni ca M01-contorViteze.M05, cu capcana mutata in alta parte. Fiecare
 proiect "b" trece prin exact aceeasi teorie ca fratele lui fara "b".
 
 | # | Mini-proiect | Ce trebuie sa iasa |
@@ -79,7 +79,7 @@ iti spune unde sa cauti si ce intrebare sa-ti pui.
   `teorie/B3-exception-wrapping` arata ce trebuie sa intrebi obiectul de
   exceptie ca sa afli motivul real.
 
-### M05 - Contor de vizite
+### contorViteze.M05 - Contor de vizite
 - Stagiul A e deja scris ca exemplu in `teorie/C1-race-condition`.
 - Intre B si C nu difera DACA protejezi, ci CAT tii protectia. Operatia
   lenta nu atinge contorul — pune-ti intrebarea daca are ce cauta inauntru.

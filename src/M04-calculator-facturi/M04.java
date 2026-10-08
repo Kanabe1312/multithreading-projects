@@ -89,9 +89,9 @@ public class M04 {
             try{
                 int rezultate = futures.get(i).get();
                 total+=rezultate;
-                System.out.println("Factura " + i + " total: " + rezultate);
+                System.out.println("Factura " + i + " total: " + rezultate + " ms");
             }catch(Exception e){
-                System.out.println("Factura "+ i + "  :  " + e.getMessage());
+                System.out.println("Factura "+ i + "  :  " + e.getCause().getMessage());
                 esuate++;
             }
         }

@@ -114,9 +114,9 @@ public class M04b {
         }
 
         System.out.println();
-        System.out.println("Cel mai ieftin: " + furnizorIeftin  + "este" + celMaiIeftin );
-        System.out.println("Oferte esute: " + totalEsuate);
-        System.out.println("Durata totala: " + total + " ms");
-        System.out.println("Suma timpilor: " + sumaTimpilor + " ms");
+        System.out.println("Cel mai ieftin: " + furnizorIeftin  + " este " + celMaiIeftin );
+        System.out.println("Oferte esuate : " + totalEsuate);
+        System.out.println("Durata totala : " + total + " ms");
+        System.out.println("Suma timpilor : " + sumaTimpilor + " ms");
     }
 }

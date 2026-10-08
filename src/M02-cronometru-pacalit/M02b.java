@@ -27,6 +27,8 @@ public class M02b {
     static class Colet extends Thread {
         private final Set<String> fire;
 
+
+
         public Colet(Set<String> fire) {
             this.fire = fire;
         }
@@ -100,5 +102,6 @@ public class M02b {
 
         System.out.println("Varianta B: " + durataB + " ms");
         System.out.println("Fire distincte B: " + fireB.size());
+        System.out.println("A a fost de " + Math.round(durataB * 10.0 / durataA) / 10.0 + " ori mai rapid");
     }
 }
