@@ -28,8 +28,94 @@
 //   Furnizorul anuntat ca cel mai ieftin nu e primul care a raspuns.
 // =============================================================
 
-public class M04b {
-    public static void main(String[] args) {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+public class M04b {
+    static class Furnizor implements Callable<Integer> {
+
+        private final String nume;
+        private final int pret;
+        private final int timp;
+        private final boolean stoc;
+
+        public Furnizor(String nume, int pret, int timp, boolean stoc) {
+            this.nume = nume;
+            this.pret = pret;
+            this.timp = timp;
+            this.stoc = stoc;
+        }
+
+        @Override
+        public Integer call() throws Exception {
+
+            Thread.sleep(timp);
+
+            if (!stoc) {
+                throw new Exception("Supplier " + nume + " is out of stock");
+            }
+
+            System.out.println(nume + " raspuns de " + Thread.currentThread().getName());
+            return pret;
+        }
+    }
+    public static void main(String[] args) {
+        List<Furnizor> furnizori = new ArrayList<>();
+
+
+        furnizori.add(new Furnizor("digi", 150, 500, true));
+        furnizori.add(new Furnizor("orange", 120, 300, true));
+        furnizori.add(new Furnizor("gama", 80, 600, false));
+        furnizori.add(new Furnizor("vodafone", 100, 700, true));
+        furnizori.add(new Furnizor("telecom", 130, 400, true));
+
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+        List<Future<Integer>> futures = new ArrayList<>();
+        long start = System.currentTimeMillis();
+        for(Furnizor furnizor : furnizori){
+            futures.add(executor.submit(furnizor));
+        }
+        executor.shutdown();
+
+        int totalEsuate = 0;
+        int celMaiIeftin = Integer.MAX_VALUE;
+        String furnizorIeftin = "";
+
+        for (int i = 0; i < futures.size(); i++) {
+            try {
+                int pret = futures.get(i).get();
+
+                System.out.println("Pret " + furnizori.get(i).nume + ": " + pret);
+
+                if (pret < celMaiIeftin) {
+                    celMaiIeftin = pret;
+                    furnizorIeftin = furnizori.get(i).nume;
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getCause().getMessage());
+                totalEsuate++;
+            }
+        }
+
+        long total = System.currentTimeMillis() - start;
+
+        int sumaTimpilor = 0;
+
+        for (Furnizor furnizor : furnizori) {
+            sumaTimpilor += furnizor.timp;
+        }
+
+        System.out.println();
+        System.out.println("Cel mai ieftin: " + furnizorIeftin  + "este" + celMaiIeftin );
+        System.out.println("Oferte esute: " + totalEsuate);
+        System.out.println("Durata totala: " + total + " ms");
+        System.out.println("Suma timpilor: " + sumaTimpilor + " ms");
     }
 }
