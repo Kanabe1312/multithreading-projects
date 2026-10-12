@@ -28,7 +28,48 @@
 // =============================================================
 
 public class M06 {
-    public static void main(String[] args) {
+
+    static class Robot extends Thread{
+        //Pt A fara volatile,rezolva vizibilitatea
+        private volatile boolean oprit = false;
+        private long rotatii = 0;
+
+        @Override
+        public void run() {
+            while(!oprit){
+                rotatii++;
+            }
+        }
+        void apasaButon(){
+            oprit = true;
+        }
+
+        long getRotatii(){
+            return rotatii;
+        }
+
+    }
+    public static void main(String[] args) throws InterruptedException {
+
+        Robot robot = new Robot();
+        robot.setDaemon(true);
+        robot.start();
+
+        Thread.sleep(500);
+
+        long apasare = System.currentTimeMillis();
+        robot.apasaButon();
+        robot.join(2000);
+
+        long durata = System.currentTimeMillis() - apasare;
+
+        if(robot.isAlive()){
+            System.out.println("Robotul nu s-a oprit. ");
+        }else {
+            System.out.println("Roboul  s-a oprit. ");
+        }
+        System.out.println("Timp de la apasare: " + durata+ " ms");
+        System.out.println("Rotatii: " + robot.getRotatii());
 
     }
 }

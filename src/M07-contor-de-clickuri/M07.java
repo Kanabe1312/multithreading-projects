@@ -21,8 +21,114 @@
 //   In tot fisierul nu apare cuvantul `synchronized`.
 // =============================================================
 
-public class M07 {
-    public static void main(String[] args) {
+import java.util.concurrent.atomic.AtomicInteger;
 
+public class M07 {
+
+    static class Contor{
+        private volatile int likeuri = 0;
+
+        void click(){
+            likeuri++;
+        }
+
+        int getlikeuri(){
+            return likeuri;
+        }
+    }
+
+    static class ContorAtomic{
+        private final AtomicInteger likeuri = new AtomicInteger(0);
+        void click(){
+            likeuri.getAndIncrement();
+        }
+        int getlikeuri(){
+            return likeuri.get();
+        }
+    }
+
+    static class Utilizator implements Runnable{
+        private final Contor contor;
+
+        public Utilizator(Contor contor){
+            this.contor = contor;
+        }
+        @Override
+        public void run() {
+            for(int i = 0; i < 100000; i++){
+                contor.click();
+            }
+        }
+    }
+
+    static class UtilizatorAtomic implements Runnable{
+        private final ContorAtomic contor;
+        public UtilizatorAtomic(ContorAtomic contor){
+            this.contor = contor;
+        }
+        @Override
+        public void run() {
+            for(int i = 0; i < 100000; i++){
+                contor.click();
+            }
+        }
+    }
+    public static void main(String[] args) throws InterruptedException {
+
+        Contor contor = new Contor();
+
+        Thread t1 = new Thread(new Utilizator(contor));
+        Thread t2 = new Thread(new Utilizator(contor));
+        Thread t3 = new Thread(new Utilizator(contor));
+        Thread t4 = new Thread(new Utilizator(contor));
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+
+        int obtinute = contor.getlikeuri();
+        int asteptate = 400000;
+        int pierdute = asteptate - obtinute;
+
+        System.out.println("Stagiul A");
+        System.out.println("like-uri numarate: " + obtinute);
+        System.out.println("like-uri asteptate: " + asteptate);
+        System.out.println("like-uri pierdute : " + pierdute);
+
+        stagiulB();
+
+    }
+    static void stagiulB() throws InterruptedException {
+
+        ContorAtomic contor = new ContorAtomic();
+
+        Thread t1 = new Thread(new UtilizatorAtomic(contor));
+        Thread t2 = new Thread(new UtilizatorAtomic(contor));
+        Thread t3 = new Thread(new UtilizatorAtomic(contor));
+        Thread t4 = new Thread(new UtilizatorAtomic(contor));
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+
+        int obtinute = contor.getlikeuri();
+        int asteptate = 400_000;
+        int pierdute = asteptate - obtinute;
+
+        System.out.println("Stagiul B");
+        System.out.println("like-uri numarate: " + obtinute);
+        System.out.println("like-uri asteptate: " + asteptate);
+        System.out.println("Like-uri pierdute: " + pierdute);
     }
 }
